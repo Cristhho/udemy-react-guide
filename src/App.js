@@ -1,26 +1,19 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import MoviesList from './components/MoviesList';
 import AddMovie from './components/AddMovie';
+import useHttp from './hooks/use-http';
 import './App.css';
 
 function App() {
 
   const [movies, setMovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  
-  const fetchMovies = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('https://react-burger-app-bb.firebaseio.com/movies.json');
+  const { isLoading, error, sendRequest: fetchMovies } = useHttp();
 
-      if (!response.ok) throw new Error(`Code: ${response.status} - Something went wrong!`);
-
-      const data = await response.json();
+  useEffect(() => {
+    const transformMovies = (data) => {
       const loadedMovies = [];
-
+  
       for (const movie in data) {
         loadedMovies.push({
           id: movie,
@@ -30,14 +23,10 @@ function App() {
         });
       }
       setMovies(loadedMovies);
-    } catch (err) {
-      setError(err.message);
-    }
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    fetchMovies();
+    };
+    fetchMovies({
+      url: 'https://react-burger-app-bb.firebaseio.com/movies.json',
+    }, transformMovies);
   }, [fetchMovies]);
 
   async function addMovieHandler(movie) {
