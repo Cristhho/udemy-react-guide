@@ -25,6 +25,16 @@ const Cart = (props) => {
     setCheckout(true);
   };
 
+  const submitOrderHandler = (userData) => {
+    fetch('https://react-burger-app-bb.firebaseio.com/mealsOrders.json',{
+      method: 'POST',
+      body: JSON.stringify({
+        user: userData,
+        orderItems: ctx.items
+      })
+    });
+  };
+
   const cartItems = (
     <ul className={classes["cart-items"]}>
       {ctx.items.map((item) => (
@@ -55,7 +65,7 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {checkout && <Checkout onCancel={props.onClose} />}
+      {checkout && <Checkout onCancel={props.onClose} onConfirm={submitOrderHandler} />}
       {!checkout && modalActions}
     </Modal>
   );
