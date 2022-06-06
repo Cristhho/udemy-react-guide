@@ -132,3 +132,4 @@ thumb
 sketch
 
 package-lock.json
+.env.local
