@@ -1,4 +1,4 @@
-
+import Head from 'next/head';
 import { MongoClient, ObjectId } from 'mongodb';
 
 import MeetupDetail from "../../components/meetups/MeetupDetail";
@@ -45,12 +45,18 @@ export const getStaticPaths = async () => {
 
 const MeetupDetailPage = (props) => {
   return (
-    <MeetupDetail
-      image={props.meetupData.image}
-      title={props.meetupData.title}
-      address={props.meetupData.address}
-      description={props.meetupData.description}
-    />
+    <>
+      <Head>
+        <title>{props.meetupData.title}</title>
+        <meta name='description' content={props.meetupData.description} />
+      </Head>
+      <MeetupDetail
+        image={props.meetupData.image}
+        title={props.meetupData.title}
+        address={props.meetupData.address}
+        description={props.meetupData.description}
+      />
+    </>
   );
 }
 
